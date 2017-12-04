@@ -26,7 +26,7 @@ public class GitHubRepositoryServiceV3Test {
     public void fetchPullRequestsTest() throws Exception
     {
         final String repoName = "ramda";
-        List<PullRequestDTO> pullRequests = repositoryService.fetchPullRequests("ramda", repoName, null, null, null, null, null);
+        List<PullRequestDTO> pullRequests = repositoryService.fetchPullRequests("ramda", repoName, null, null, null, null, null, 1);
         Assert.assertNotNull(pullRequests);
 
         //Verify some part of this DTO is populated correctly.

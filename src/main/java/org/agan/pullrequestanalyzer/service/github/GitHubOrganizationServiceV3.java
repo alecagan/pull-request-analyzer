@@ -33,13 +33,14 @@ public class GitHubOrganizationServiceV3 extends LoggingApiService {
     /**
      * Fetch repositories for an organization
      * @param organizationName
+     * @param page - page of results to retrieve. 1-indexed.
      * @return List of RepositoryDTOs
      *
      * GitHub Documentation: https://developer.github.com/v3/repos/#list-organization-repositories
      */
-    public List<RepositoryDTO> getRepositoriesForOrganization(String organizationName) {
+    public List<RepositoryDTO> getRepositoriesForOrganization(String organizationName, int page) {
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.newInstance().scheme("https").host(gitHubHost)
-                .pathSegment("orgs", organizationName,"repos");
+                .pathSegment("orgs", organizationName, "repos").queryParam("page", page).queryParam("per_page", 100);
 
         RepositoryDTO[] repositories = get(uriBuilder.build().toUri(), defaultHeaders, RepositoryDTO[].class);
         if(repositories != null)

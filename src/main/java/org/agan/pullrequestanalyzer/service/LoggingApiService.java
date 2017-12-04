@@ -1,6 +1,5 @@
 package org.agan.pullrequestanalyzer.service;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;

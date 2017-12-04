@@ -51,11 +51,12 @@ public class GitHubRepositoryServiceV3 extends LoggingApiService
      * @param base - filter by base branch name
      * @param sort - result sorting. Default: created
      * @param direction - result sorting order. Default: if sorted by created, descending. Otherwise, ascending.
+     * @param page - page of results to fetch. 1-indexed.
      * @return
      *
      * @see https://developer.github.com/v3/pulls/#list-pull-requests
      */
-    public List<PullRequestDTO> fetchPullRequests(String owner, String repo, PullRequestState state, String head, String base, ResultsSortType sort, ResultsSortDirection direction) {
+    public List<PullRequestDTO> fetchPullRequests(String owner, String repo, PullRequestState state, String head, String base, ResultsSortType sort, ResultsSortDirection direction, int page) {
         UriComponentsBuilder urlBuilder = UriComponentsBuilder.newInstance();
         urlBuilder.scheme("https").host(gitHubHost).pathSegment("repos", owner, repo, "pulls");
 
@@ -74,6 +75,8 @@ public class GitHubRepositoryServiceV3 extends LoggingApiService
         if(direction != null) {
             urlBuilder.queryParam("direction", direction.apiText);
         }
+
+        urlBuilder.queryParam("page", page).queryParam("per_page", 100);
 
         PullRequestDTO[] pullRequests = get(urlBuilder.build().toUri(), defaultHeaders, PullRequestDTO[].class);
 
