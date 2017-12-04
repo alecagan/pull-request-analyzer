@@ -3,6 +3,7 @@ package org.agan.pullrequestanalyzer.dto.github;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+import java.util.Date;
 import java.util.List;
 
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -64,22 +65,27 @@ public class RepositoryDTO {
     private Integer watchersCount;
     private Integer size;
     private String defaultBranch;
+    private LicenseDTO license;
     private Integer openIssuesCount;
     private List<String> topics = null;
     private Boolean hasIssues;
     private Boolean hasWiki;
     private Boolean hasPages;
+    private Boolean hasProjects;
     private Boolean hasDownloads;
     private Boolean archived;
-    private String pushedAt;
-    private String createdAt;
-    private String updatedAt;
+    private Date pushedAt;
+    private Date createdAt;
+    private Date updatedAt;
     private PermissionsDTO permissions;
     private Boolean allowRebaseMerge;
     private Boolean allowSquashMerge;
     private Boolean allowMergeCommit;
     private Integer subscribersCount;
     private Integer networkCount;
+    private Integer openIssues;
+    private Integer forks;
+    private Integer watchers;
 
     public long getId() {
         return id;
@@ -537,6 +543,14 @@ public class RepositoryDTO {
         this.defaultBranch = defaultBranch;
     }
 
+    public LicenseDTO getLicense() {
+        return license;
+    }
+
+    public void setLicense(LicenseDTO license) {
+        this.license = license;
+    }
+
     public Integer getOpenIssuesCount() {
         return openIssuesCount;
     }
@@ -577,6 +591,14 @@ public class RepositoryDTO {
         this.hasPages = hasPages;
     }
 
+    public Boolean getHasProjects() {
+        return hasProjects;
+    }
+
+    public void setHasProjects(Boolean hasProjects) {
+        this.hasProjects = hasProjects;
+    }
+
     public Boolean getHasDownloads() {
         return hasDownloads;
     }
@@ -593,27 +615,27 @@ public class RepositoryDTO {
         this.archived = archived;
     }
 
-    public String getPushedAt() {
+    public Date getPushedAt() {
         return pushedAt;
     }
 
-    public void setPushedAt(String pushedAt) {
+    public void setPushedAt(Date pushedAt) {
         this.pushedAt = pushedAt;
     }
 
-    public String getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -663,5 +685,29 @@ public class RepositoryDTO {
 
     public void setNetworkCount(Integer networkCount) {
         this.networkCount = networkCount;
+    }
+
+    public Integer getOpenIssues() {
+        return openIssues;
+    }
+
+    public void setOpenIssues(Integer openIssues) {
+        this.openIssues = openIssues;
+    }
+
+    public Integer getForks() {
+        return forks;
+    }
+
+    public void setForks(Integer forks) {
+        this.forks = forks;
+    }
+
+    public Integer getWatchers() {
+        return watchers;
+    }
+
+    public void setWatchers(Integer watchers) {
+        this.watchers = watchers;
     }
 }

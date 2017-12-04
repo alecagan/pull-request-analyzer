@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -27,10 +28,10 @@ public class PullRequestDTO {
     private UserDTO assignee;
     private MilestoneDTO milestone;
     private Boolean locked;
-    private String createdAt;
-    private String updatedAt;
-    private String closedAt;
-    private String mergedAt;
+    private Date createdAt;
+    private Date updatedAt;
+    private Date closedAt;
+    private Date mergedAt;
     private CommitDTO head;
     private CommitDTO base;
     private List<String> links;
@@ -185,35 +186,35 @@ public class PullRequestDTO {
         this.locked = locked;
     }
 
-    public String getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public String getClosedAt() {
+    public Date getClosedAt() {
         return closedAt;
     }
 
-    public void setClosedAt(String closedAt) {
+    public void setClosedAt(Date closedAt) {
         this.closedAt = closedAt;
     }
 
-    public String getMergedAt() {
+    public Date getMergedAt() {
         return mergedAt;
     }
 
-    public void setMergedAt(String mergedAt) {
+    public void setMergedAt(Date mergedAt) {
         this.mergedAt = mergedAt;
     }
 

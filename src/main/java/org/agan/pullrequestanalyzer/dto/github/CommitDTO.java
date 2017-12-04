@@ -3,6 +3,7 @@ package org.agan.pullrequestanalyzer.dto.github;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+import java.util.Date;
 import java.util.List;
 
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -74,9 +75,9 @@ public class CommitDTO {
     private Boolean hasPages;
     private Boolean hasDownloads;
     private Boolean archived;
-    private String pushedAt;
-    private String createdAt;
-    private String updatedAt;
+    private Date pushedAt;
+    private Date createdAt;
+    private Date updatedAt;
     private Boolean allowRebaseMerge;
     private Boolean allowSquashMerge;
     private Boolean allowMergeCommit;
@@ -620,27 +621,27 @@ public class CommitDTO {
         this.archived = archived;
     }
 
-    public String getPushedAt() {
+    public Date getPushedAt() {
         return pushedAt;
     }
 
-    public void setPushedAt(String pushedAt) {
+    public void setPushedAt(Date pushedAt) {
         this.pushedAt = pushedAt;
     }
 
-    public String getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 

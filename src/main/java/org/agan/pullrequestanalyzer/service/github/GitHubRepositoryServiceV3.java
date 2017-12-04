@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * GitHub documentation: https://developer.github.com/v3/pulls
  */
-public class GitHubRepositoryServiceRestV3 extends LoggingApiService
+public class GitHubRepositoryServiceV3 extends LoggingApiService
 {
     private final String gitHubHost;
     private final HttpHeaders defaultHeaders;
@@ -26,7 +26,7 @@ public class GitHubRepositoryServiceRestV3 extends LoggingApiService
      * @param githubHost - hostname, e.g. "api.github.com"
      * @param defaultHeaders - any headers that are required on all requests
      */
-    public GitHubRepositoryServiceRestV3(RestTemplate restTemplate, String githubHost, Map<String, String> defaultHeaders)
+    public GitHubRepositoryServiceV3(RestTemplate restTemplate, String githubHost, Map<String, String> defaultHeaders)
     {
         super(restTemplate);
 
@@ -69,10 +69,10 @@ public class GitHubRepositoryServiceRestV3 extends LoggingApiService
             urlBuilder.queryParam("base", base);
         }
         if(sort != null) {
-            urlBuilder.queryParam("state", sort.apiText);
+            urlBuilder.queryParam("sort", sort.apiText);
         }
         if(direction != null) {
-            urlBuilder.queryParam("direction", sort.apiText);
+            urlBuilder.queryParam("direction", direction.apiText);
         }
 
         PullRequestDTO[] pullRequests = get(urlBuilder.build().toUri(), defaultHeaders, PullRequestDTO[].class);
