@@ -21,8 +21,8 @@ public class GitHubRepositoryServiceV3Test {
         repositoryService = new GitHubRepositoryServiceV3(new RestTemplate(),"api.github.com", headersMap);
     }
 
-    @Ignore
     @Test
+    @Ignore // Ignored so that builds aren't dependant on an external service.
     public void fetchPullRequestsTest() throws Exception
     {
         final String repoName = "ramda";

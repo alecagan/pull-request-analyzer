@@ -1,5 +1,6 @@
 package org.agan.pullrequestanalyzer.dto.github;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -9,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PullRequestDTO {
     private Integer id;
     private String url;
@@ -26,6 +28,8 @@ public class PullRequestDTO {
     private String title;
     private String body;
     private UserDTO assignee;
+    private List<UserDTO> assignees;
+    private List<UserDTO> requestedReviewers;
     private MilestoneDTO milestone;
     private Boolean locked;
     private Date createdAt;
@@ -35,7 +39,9 @@ public class PullRequestDTO {
     private CommitDTO head;
     private CommitDTO base;
     private List<String> links;
-    private UserDTO User;
+    private UserDTO user;
+    private String mergeCommitSha;
+    private String authorAssociation;
 
     public PullRequestDTO()
     {
@@ -170,6 +176,22 @@ public class PullRequestDTO {
         this.assignee = assignee;
     }
 
+    public List<UserDTO> getAssignees() {
+        return assignees;
+    }
+
+    public void setAssignees(List<UserDTO> assignees) {
+        this.assignees = assignees;
+    }
+
+    public List<UserDTO> getRequestedReviewers() {
+        return requestedReviewers;
+    }
+
+    public void setRequestedReviewers(List<UserDTO> requestedReviewers) {
+        this.requestedReviewers = requestedReviewers;
+    }
+
     public MilestoneDTO getMilestone() {
         return milestone;
     }
@@ -256,10 +278,26 @@ public class PullRequestDTO {
     }
 
     public UserDTO getUser() {
-        return User;
+        return user;
     }
 
     public void setUser(UserDTO user) {
-        User = user;
+        this.user = user;
+    }
+
+    public String getMergeCommitSha() {
+        return mergeCommitSha;
+    }
+
+    public void setMergeCommitSha(String mergeCommitSha) {
+        this.mergeCommitSha = mergeCommitSha;
+    }
+
+    public String getAuthorAssociation() {
+        return authorAssociation;
+    }
+
+    public void setAuthorAssociation(String authorAssociation) {
+        this.authorAssociation = authorAssociation;
     }
 }

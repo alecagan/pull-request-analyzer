@@ -1,5 +1,6 @@
 package org.agan.pullrequestanalyzer.dto.github;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -37,6 +38,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
  * NOTE: This object "flattens"  the links, removing the nested href object.
  */
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LinksDTO {
     private String self;
     private String html;

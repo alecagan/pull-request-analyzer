@@ -1,5 +1,6 @@
 package org.agan.pullrequestanalyzer.dto.github;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -7,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CommitDTO {
     private String label;
     private String ref;

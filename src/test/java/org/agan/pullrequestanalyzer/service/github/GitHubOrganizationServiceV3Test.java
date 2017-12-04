@@ -20,7 +20,7 @@ public class GitHubOrganizationServiceV3Test {
     }
 
     @Test
-    @Ignore
+    @Ignore // Ignored so that builds aren't dependant on an external service.
     public void getReposForOrganizationTest() {
         final String orgName = "ramda";
         List<RepositoryDTO> repositories = organizationService.getRepositoriesForOrganization(orgName);
