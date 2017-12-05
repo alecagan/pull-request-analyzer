@@ -62,6 +62,7 @@ public class OrganizationService {
                     continue;
                 }
 
+                // TODO: Thread this, so that each repo is fetched asynchronously.
                 List<PullRequestDTO> pullRequests = getAllPullRequests(repoOwner, repoName);
 
                 log.debug(repoName + " PRs - " + pullRequests.size());
@@ -79,9 +80,11 @@ public class OrganizationService {
 
         //TODO: It's possible that a PR could be double-counted if something gets merged while this is executing,
         //      and the last item of a page moves to the next.
+        int page = 1;
         do {
-           pageOfRequests = repositoryService.fetchPullRequests(repositoryOwner, repositoryName, GitHubRepositoryServiceV3.PullRequestState.CLOSED, null, null, GitHubRepositoryServiceV3.ResultsSortType.UPDATED_DATE, GitHubRepositoryServiceV3.ResultsSortDirection.DESCENDING, 1);
+           pageOfRequests = repositoryService.fetchPullRequests(repositoryOwner, repositoryName, GitHubRepositoryServiceV3.PullRequestState.ALL, null, null, null, null, page);
            allRequests.addAll(pageOfRequests);
+           page++;
         }
         while(pageOfRequests.size() > 0);
 
