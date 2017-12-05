@@ -20,6 +20,6 @@ public class PullRequestAnalyzerConfig {
     @Bean
     @Autowired // Autowired from GitHubConfig.java
     public OrganizationService organizationService(GitHubOrganizationServiceV3 gitHubOrganizationServiceV3, GitHubRepositoryServiceV3 gitHubRepositoryServiceV3) {
-        return new OrganizationService(gitHubOrganizationServiceV3, gitHubRepositoryServiceV3);
+        return new OrganizationService(gitHubOrganizationServiceV3, gitHubRepositoryServiceV3, 4);
     }
 }

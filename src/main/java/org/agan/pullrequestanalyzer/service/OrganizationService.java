@@ -2,10 +2,9 @@ package org.agan.pullrequestanalyzer.service;
 
 import org.agan.pullrequestanalyzer.domain.Organization;
 import org.agan.pullrequestanalyzer.domain.Repository;
-import org.agan.pullrequestanalyzer.domain.TimePeriod;
-import org.agan.pullrequestanalyzer.dto.github.PullRequestDTO;
 import org.agan.pullrequestanalyzer.dto.github.RepositoryDTO;
 import org.agan.pullrequestanalyzer.dto.github.UserDTO;
+import org.agan.pullrequestanalyzer.service.concurrency.RepositoryCallable;
 import org.agan.pullrequestanalyzer.service.github.GitHubOrganizationServiceV3;
 import org.agan.pullrequestanalyzer.service.github.GitHubRepositoryServiceV3;
 import org.slf4j.Logger;
@@ -13,7 +12,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Class designed to pull all information on an Organization
@@ -23,13 +24,16 @@ public class OrganizationService {
     private final Logger log = LoggerFactory.getLogger(OrganizationService.class);
     private GitHubOrganizationServiceV3 organizationService;
     private GitHubRepositoryServiceV3 repositoryService;
+    private ExecutorService executor;
+
 
     // Very primitive caching...
     private Organization cachedOrg;
 
-    public OrganizationService(GitHubOrganizationServiceV3 organizationService, GitHubRepositoryServiceV3 repositoryService) {
+    public OrganizationService(GitHubOrganizationServiceV3 organizationService, GitHubRepositoryServiceV3 repositoryService, int numThreads) {
         this.organizationService = organizationService;
         this.repositoryService = repositoryService;
+        this.executor = Executors.newFixedThreadPool(numThreads);
 
         this.cachedOrg = null;
     }
@@ -40,6 +44,9 @@ public class OrganizationService {
         {
             List<Repository> orgRepos = new ArrayList<>();
             List<RepositoryDTO> orgRepositories = organizationService.getRepositoriesForOrganization(orgName, 1);
+
+            List<Future<Repository>> futureRepos = new ArrayList<>();
+
             for(RepositoryDTO repo : orgRepositories)
             {
                 String repoName = repo.getName();
@@ -62,32 +69,26 @@ public class OrganizationService {
                     continue;
                 }
 
-                // TODO: Thread this, so that each repo is fetched asynchronously.
-                List<PullRequestDTO> pullRequests = getAllPullRequests(repoOwner, repoName);
+                RepositoryCallable repositoryCallable = new RepositoryCallable(repoOwner, repoName, repositoryService);
+                futureRepos.add(executor.submit(repositoryCallable));
 
-                log.debug(repoName + " PRs - " + pullRequests.size());
-                orgRepos.add(new Repository(repoName, pullRequests));
             }
+
+            // Wait for all repos to be retrieved.
+            for(Future<Repository> future : futureRepos) {
+                try {
+                    orgRepos.add(future.get());
+                }
+                catch(Exception e) {
+                    log.error("Asynchronous fetching of pull requests ran into an error!", e);
+                }
+            }
+
+            executor.shutdown();
+
             cachedOrg = new Organization(orgName, orgRepos);
         }
 
         return cachedOrg;
-    }
-
-    public List<PullRequestDTO> getAllPullRequests(String repositoryOwner, String repositoryName) {
-        List<PullRequestDTO> allRequests = new ArrayList<>();
-        List<PullRequestDTO> pageOfRequests;
-
-        //TODO: It's possible that a PR could be double-counted if something gets merged while this is executing,
-        //      and the last item of a page moves to the next.
-        int page = 1;
-        do {
-           pageOfRequests = repositoryService.fetchPullRequests(repositoryOwner, repositoryName, GitHubRepositoryServiceV3.PullRequestState.ALL, null, null, null, null, page);
-           allRequests.addAll(pageOfRequests);
-           page++;
-        }
-        while(pageOfRequests.size() > 0);
-
-        return allRequests;
     }
 }
