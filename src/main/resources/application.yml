@@ -1,1 +1,6 @@
-logging.level.org.agan: WARN
+logging.level.org.agan: DEBUG
+pullrequestanalyzer:
+  github:
+    host: api.github.com
+    username: #YOUR USERNAME HERE
+    personalAccessToken: #YOUR PERSONAL ACCESS TOKEN HERE

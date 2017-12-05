@@ -130,5 +130,4 @@ public class GitHubRepositoryServiceV3 extends LoggingApiService
         }
 
     }
-
 }
