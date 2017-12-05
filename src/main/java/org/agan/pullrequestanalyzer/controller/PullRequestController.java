@@ -24,37 +24,36 @@ public class PullRequestController {
 
     @RequestMapping("/{org}/weekoverweek")
     public PeriodMergesGrowthResponse getWeekOverWeekMergesForOrg(@PathVariable("org") String organizationName) {
-
         Organization organization = organizationService.getOrganization(organizationName);
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
-        // "Current" period
-        PeriodMergesResponse currentMerges = getOrganizationMergesInWeek(-1, organization);
+        // Last week
+        calendar.add(Calendar.WEEK_OF_YEAR, -1);
+        TimePeriod mostRecentWeek = CalendarUtil.getWeekPeriodContainingDate(calendar.getTime());
 
-        //"Previous" period
-        PeriodMergesResponse previousMerges = getOrganizationMergesInWeek(-2, organization);
+        // 2 weeks ago
+        calendar.add(Calendar.WEEK_OF_YEAR, -1);
+        TimePeriod previousWeek = CalendarUtil.getWeekPeriodContainingDate(calendar.getTime());
 
-        double currentMergedPRs = currentMerges.getPullRequestsMerged();
-        double previousMergedPRs = previousMerges.getPullRequestsMerged();
-
-        return new PeriodMergesGrowthResponse(previousMerges, currentMerges);
+        return getGrowthOverPeriods(previousWeek, mostRecentWeek, organization);
         }
 
-    @RequestMapping("/{org}/rollingwindow/{requestPeriod}")
-    public PeriodMergesGrowthResponse getRollingWindowMergesForOrg(@PathVariable("org") String organization, @PathVariable("requestPeriod") RequestPeriod requestPeriod) {
-        return null;
+    @RequestMapping("/{org}/rollingweek")
+    public PeriodMergesGrowthResponse getRollingWindowMergesForOrg(@PathVariable("org") String organizationName) {
+        Organization organization = organizationService.getOrganization(organizationName);
+        TimePeriod currentPeriod = CalendarUtil.getWeekPeriodEndingNow(0);
+        TimePeriod previousPeriod = CalendarUtil.getWeekPeriodEndingNow(-1);
+
+        return getGrowthOverPeriods(previousPeriod, currentPeriod, organization);
     }
 
-    private PeriodMergesResponse getOrganizationMergesInWeek(int numWeeksFromNow, Organization organization)
-    {
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        calendar.add(Calendar.WEEK_OF_YEAR, numWeeksFromNow);
-        TimePeriod period = CalendarUtil.getWeekPeriodContainingDate(calendar.getTime());
+    private PeriodMergesGrowthResponse getGrowthOverPeriods(TimePeriod baselinePeriod, TimePeriod currentPeriod, Organization organization) {
+        int currentMerges = organization.getMergedPullRequests(currentPeriod);
+        PeriodMergesResponse currentMergesResponse = new PeriodMergesResponse(currentPeriod, currentMerges);
 
-        int currentMergedPRs = organization.getMergedPullRequests(period);
-        return new PeriodMergesResponse(period, currentMergedPRs);
-    }
+        int previousMerges = organization.getMergedPullRequests(baselinePeriod);
+        PeriodMergesResponse previousMergesResponse = new PeriodMergesResponse(baselinePeriod, previousMerges);
 
-    public enum RequestPeriod{
-        WEEK
+        return new PeriodMergesGrowthResponse(previousMergesResponse, currentMergesResponse);
     }
 }

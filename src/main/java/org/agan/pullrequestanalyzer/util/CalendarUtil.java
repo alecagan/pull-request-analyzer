@@ -27,4 +27,17 @@ public class CalendarUtil {
 
         return new TimePeriod(startDate, endDate);
     }
+
+    public static TimePeriod getWeekPeriodEndingNow(int offset)
+    {
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        calendar.add(Calendar.WEEK_OF_YEAR, (offset));
+
+        Date endDate = calendar.getTime();
+        calendar.add(Calendar.WEEK_OF_YEAR, -1);
+        calendar.add(Calendar.MILLISECOND, 1);
+        Date startDate = calendar.getTime();
+
+        return new TimePeriod(startDate, endDate);
+    }
 }
