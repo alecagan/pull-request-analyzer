@@ -67,6 +67,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 * Props to http://www.jsonschema2pojo.org/ for making it easy to create POJOs from json.
+* [Billie Thompson](https://github.com/PurpleBooth), thanks for this readme template.
 * Thanks mom and dad for everything.
 * Thanks to the academy, for teaching me how to write acknowledgements.
 * Props to Scott Frost for coaching Nebraska football.
