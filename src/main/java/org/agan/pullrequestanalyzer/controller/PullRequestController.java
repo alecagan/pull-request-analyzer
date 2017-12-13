@@ -8,10 +8,10 @@ import org.agan.pullrequestanalyzer.service.OrganizationService;
 import org.agan.pullrequestanalyzer.util.CalendarUtil;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Calendar;
-import java.util.TimeZone;
+import java.util.*;
 
 @RestController
 @RequestMapping("/pullrequests")
@@ -45,6 +45,22 @@ public class PullRequestController {
         TimePeriod previousPeriod = CalendarUtil.getWeekPeriodEndingNow(-1);
 
         return getGrowthOverPeriods(previousPeriod, currentPeriod, organization);
+    }
+
+    @RequestMapping("/{org}/historicalWeeks")
+    public List<PeriodMergesResponse> countAllMergesByWeek(@PathVariable("org") String organizationName, @RequestParam(name="since", defaultValue = "0") long msSinceEpoch) {
+        Organization organization = organizationService.getOrganization(organizationName);
+
+        Date earliestDate = new Date(msSinceEpoch);
+
+        List<PeriodMergesResponse> responseList = new ArrayList<>();
+        List<TimePeriod> periods = CalendarUtil.getTimePeriodsSince(earliestDate);
+        for(TimePeriod week : periods) {
+            int mergedPullRequests = organization.getMergedPullRequests(week);
+            responseList.add(new PeriodMergesResponse(week, mergedPullRequests));
+        }
+
+        return responseList;
     }
 
     private PeriodMergesGrowthResponse getGrowthOverPeriods(TimePeriod baselinePeriod, TimePeriod currentPeriod, Organization organization) {
